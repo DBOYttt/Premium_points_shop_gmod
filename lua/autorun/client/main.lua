@@ -41,15 +41,28 @@ Dskin.Tab = {}
 Dskin.Tab.Active = Color(255, 0, 0, 255) -- kolor aktywnej zakładki
 Dskin.Tab.Inactive = Color(50, 50, 50, 255) -- kolor nieaktywnej zakładki
 
--- Funkcja rysująca zakładki
 function Dskin:PaintTab(panel, w, h)
-    if (panel:GetPropertySheet():GetActiveTab() == panel) then -- jeśli zakładka jest aktywna
-        surface.SetDrawColor(self.Tab.Active)
-    else
-        surface.SetDrawColor(self.Tab.Inactive)
-    end
-    surface.DrawRect(0, 0, w, h)
+  if (panel:GetPropertySheet():GetActiveTab() == panel) then -- jeśli zakładka jest aktywna
+      surface.SetDrawColor(self.Tab.Active)
+  else
+      surface.SetDrawColor(self.Tab.Inactive)
+  end
+
+  -- Rysowanie prostokąta z kwadratem jako tła zakładki
+  local rectWidth = w * 0.5 -- szerokość prostokąta = połowa szerokości zakładki
+  local rectHeight = h * 0.8 -- wysokość prostokąta = 80% wysokości zakładki
+  local squareSize = h * 0.3 -- rozmiar kwadratu = 30% wysokości zakładki
+  local rectX = w * 0.1 -- położenie prostokąta - 10% szerokości zakładki
+  local rectY = h * 0.1 -- położenie prostokąta - 10% wysokości zakładki
+
+  surface.SetDrawColor(0, 0, 0) -- ustaw kolor na czarny
+  surface.DrawRect(rectX, rectY, rectWidth, rectHeight) -- narysuj prostokąt
+  surface.SetDrawColor(255, 255, 255) -- ustaw kolor na biały
+  surface.DrawOutlinedRect(rectX, rectY, rectWidth, rectHeight) -- narysuj obrys prostokąta
+  surface.DrawRect(rectX - squareSize, rectY, squareSize, squareSize) -- narysuj kwadrat po lewej stronie prostokąta
+  surface.DrawOutlinedRect(rectX - squareSize, rectY, squareSize, squareSize) -- narysuj obrys kwadratu
 end
+
 
 -- Rejestracja niestandardowej skórki
 derma.DefineSkin("Dskin", "custom skin for Ppoints", Dskin)
