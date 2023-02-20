@@ -34,12 +34,13 @@ local function OpenPremiumMenu()
         frame:Close() -- zamknij okno po kliknięciu przycisku "X"
   end
 
+
 -- Tworzenie nowej klasy skórki dziedziczącej po klasie "Default"
 local Dskin = {}
 -- Kolor tła dla zakładek
 Dskin.Tab = {}
-Dskin.Tab.Active = Color(255, 0, 0, 255) -- kolor aktywnej zakładki
-Dskin.Tab.Inactive = Color(50, 50, 50, 255) -- kolor nieaktywnej zakładki
+Dskin.Tab.Active = Color(255, 0, 0, 0) -- kolor aktywnej zakładki
+Dskin.Tab.Inactive = Color(50, 50, 50, 0) -- kolor nieaktywnej zakładki
 
 function Dskin:PaintTab(panel, w, h)
   if (panel:GetPropertySheet():GetActiveTab() == panel) then -- jeśli zakładka jest aktywna
@@ -48,20 +49,28 @@ function Dskin:PaintTab(panel, w, h)
       surface.SetDrawColor(self.Tab.Inactive)
   end
 
-  -- Rysowanie prostokąta z kwadratem jako tła zakładki
-  local rectWidth = w * 0.5 -- szerokość prostokąta = połowa szerokości zakładki
+-- Rysowanie prostokąta z trójkątem prostokątnym jako tła zakładki
+  local rectWidth = w * 0.7 -- szerokość prostokąta = połowa szerokości zakładki
   local rectHeight = h * 0.8 -- wysokość prostokąta = 80% wysokości zakładki
-  local squareSize = h * 0.3 -- rozmiar kwadratu = 30% wysokości zakładki
-  local rectX = w * 0.1 -- położenie prostokąta - 10% szerokości zakładki
+  local triangleheight = h * 1 -- rozmiar trójkąta = 30% wysokości zakładki
+  local triangleWidth = w * 0.3
+  local rectX = (w - rectWidth) * 0.9 -- położenie prostokąta - 90% szerokości zakładki
   local rectY = h * 0.1 -- położenie prostokąta - 10% wysokości zakładki
+  local triangle = {
+    { x = h * 0.8, y = w * 0.3 },
+    { x = h * 0.1, y = w * 0.3 },
+    { x = h * 0.1, y = w * 0.1 },
+  }
 
-  surface.SetDrawColor(0, 0, 0) -- ustaw kolor na czarny
-  surface.DrawRect(rectX, rectY, rectWidth, rectHeight) -- narysuj prostokąt
-  surface.SetDrawColor(255, 255, 255) -- ustaw kolor na biały
-  surface.DrawOutlinedRect(rectX, rectY, rectWidth, rectHeight) -- narysuj obrys prostokąta
-  surface.DrawRect(rectX - squareSize, rectY, squareSize, squareSize) -- narysuj kwadrat po lewej stronie prostokąta
-  surface.DrawOutlinedRect(rectX - squareSize, rectY, squareSize, squareSize) -- narysuj obrys kwadratu
+
+
+surface.SetDrawColor(128, 128, 128) -- ustaw kolor na szary
+surface.DrawRect(rectX, rectY, rectWidth, rectHeight) -- narysuj prostokąt
+surface.SetDrawColor( 128, 128, 128 )
+draw.NoTexture()
+surface.DrawPoly(triangle)
 end
+
 
 
 -- Rejestracja niestandardowej skórki
@@ -82,7 +91,7 @@ tabsheet.Paint = function(self, w, h)
  
 local tab1 = vgui.Create("DPanel", tabsheet)
 tab1:Dock(FILL)
-tabsheet:AddSheet("Tab 1", tab1, "icon16/application_view_tile.png")
+tabsheet:AddSheet("Tab 1", tab1)
 
 tab1.Paint = function(self, w, h)
         -- narysuj tło zakładki na czerwono
@@ -92,7 +101,7 @@ tab1.Paint = function(self, w, h)
 
 local tab2 = vgui.Create("DPanel", tabsheet)
 tab2:Dock(FILL)
-tabsheet:AddSheet("Tab 2", tab2, "icon16/application_view_detail.png")
+tabsheet:AddSheet("Tab 2", tab2)
 
 tab2.Paint = function(self, w, h)
         -- narysuj tło zakładki na niebiesko
